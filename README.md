@@ -1,2 +1,2 @@
 # voice-recognition
-DSP Application : Voice Recognition pyhton app
+DSP Task #4 - Voice Recognition App
