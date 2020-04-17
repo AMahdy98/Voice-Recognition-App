@@ -94,7 +94,7 @@ if __name__ == '__main__':
     from scipy.io import wavfile
     sampleRate, songdata = wavfile.read("Adele_Million_Years_Ago_10.wav")
     spectrum = spectrogram()
-    spectrum(songdata, sampleRate, window='hann', songName="test", compressed=True)
+    spectrum(songdata, sampleRate, window='hann', songName="test", compressed=True, path='tests/')
 
 
 
