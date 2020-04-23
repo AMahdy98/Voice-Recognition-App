@@ -87,7 +87,6 @@ def loadSong(filePath: str, fSeconds: float = None) -> dict:
     :param fSeconds: number of seconds you want to load, if not it will load all the file
     :return: Dictionary contains songName, array of the data, sample rate, dataType of the array and the hashes
     """
-    features = []
     song = loadAudioFile(filePath, fSeconds)
     sampleFreqs, sampleTime, colorMesh = signal.spectrogram(song['data'], fs=song['sRate'], window='hann')
     features = _spectralFeatures(song=song['data'], S=colorMesh, sr=song['sRate'])
@@ -97,7 +96,7 @@ def loadSong(filePath: str, fSeconds: float = None) -> dict:
     song['melspectrogram_Hash'] = createPerceptualHash(features[2])
     return song
 
-
+# Load Songs
 song1 = loadSong("Songs/Adele_Million_Years_Ago_10.mp3", 60000)
 song2 = loadSong("Songs/ImagineDragons_natural_10.mp3", 60000)
 song3 = loadSong("Songs/Adele_Million_Years_Ago_10_music.mp3", 60000)
@@ -105,15 +104,19 @@ song4 = loadSong("Songs/Spacetoon_remi_11.mp3", 60000)
 
 songs = [song1, song2, song3, song4]
 
+# Mix 2 songs -> Create Spectrogram -> Create Hash
 mixedSong = mixSongs(song1['data'], song2['data'], w=0.8)
 sampleFreqs4, sampleTime4, colorMesh4 = signal.spectrogram(mixedSong, fs=song1['sRate'], window='hann')
 hashMix = createPerceptualHash(colorMesh4)
 
+# Summation of all hamming Distance
+# Rule for Similarity Index: (1-hammingDistance/totalHashes)*100
 totalHashes = 0
 for song in songs:
     song['hammingDistance'] = hex_to_hash(song['spectrogram_Hash']) - hex_to_hash(hashMix)
     totalHashes += song['hammingDistance']
 
+# Print the results
 print("hash1: ", song1['spectrogram_Hash'])
 print("hash2: ", song2['spectrogram_Hash'])
 print("hash3: ", song3['spectrogram_Hash'])
