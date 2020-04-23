@@ -133,5 +133,5 @@ dmypy.json
 .pyre/
 
 # arbitrary added files 
-spectrogramPlayground.ipynb
+# spectrogramPlayground.ipynb
 tests
