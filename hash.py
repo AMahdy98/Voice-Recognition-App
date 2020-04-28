@@ -1,135 +1,66 @@
-from PIL import Image
-import imagehash, json
+from helpers import *
 from imagehash import hex_to_hash
-import numpy as np
-from scipy import signal
-from pydub import AudioSegment
-import librosa as l
-
-
-def loadAudioFile(filePath: str, fSeconds: float = None) -> dict:
-    """
-    Loads any audio file
-
-    :param filePath: relative path of the file
-    :param fSeconds: number of seconds you want to load, if not it will load all the file
-    :return: Dictionary contains songName, array of the data, sample rate, dataType of the array
-    """
-    if fSeconds:
-        audioFile = AudioSegment.from_mp3(filePath)[:fSeconds]
-    else:
-        audioFile = AudioSegment.from_mp3(filePath)
-    songName = filePath.split('/')[-1]
-    songData = np.array(audioFile.get_array_of_samples())
-    sampleRate = audioFile.frame_rate
-    songDataType = songData.dtype
-    songDictionary = {
-        "name": songName,
-        "data": songData,
-        "sRate": sampleRate,
-        "dType": songDataType,
-        "spectrogram_Hash": None,
-        "spectral_centroid_Hash": None,
-        "spectral_rolloff_Hash": None,
-        "melspectrogram_Hash": None,
-        "hammingDistance": None
-    }
-    return songDictionary
-
-
-def _spectralFeatures(song: "np.ndarray"= None, S: "np.ndarray" = None, sr: int = 22050, window: str = 'hann'):
-    """
-    Calculates the Spectral Centroid of a given data or the data instantiated in the class
-
-    Parameters
-    -----------
-    - song  : wav file array
-    - S    : spectrogram readings
-    - sr : sampling frequency default 22050
-    - window: a string specifying the window applied default hann (see options)
-    """
-    specFeatures = [None, None, None]
-    specFeatures[0] = l.feature.spectral_centroid(y= song, S=S, sr=sr, window = window)
-    specFeatures[1] = l.feature.spectral_rolloff(y= song, S=S, sr=sr, window = window)
-    specFeatures[2] = l.feature.melspectrogram(y= song, S=S, sr=sr, window = window)
-    return specFeatures
-
-
-def mixSongs(song1: np.ndarray, song2: np.ndarray, dType: str = 'int16', w: float = 0.5) -> np.ndarray:
-    """
-    Mixes 2 songs with the given weight
-    :param song1: data array of the song1
-    :param song2: data array of the song2
-    :param dType: data type of the song
-    :param w: weight (percentage) of song1
-    :return array of the mixing songs
-    """
-    mixed = (w*song1 + (1.0-w)*song2).astype(dType)
-    return mixed
-
-
-def createPerceptualHash(arrayData: "np.ndarray") -> str:
-    """
-    Creates a perceptual hash of the given data
-    :param arrayData: an array contains the data to be hashed
-    :return: a string describe the hashed array (could be converted to hex using hex_to_hash())
-    """
-    dataInstance = Image.fromarray(arrayData).convert('RGB')
-    dataHash = imagehash.phash(dataInstance, hash_size=16)
-    return dataHash.__str__()
-
-
-def loadSong(filePath: str, fSeconds: float = None) -> dict:
-    """
-    Loads any audio file, create a spectrogram, extract some features and hash them.
-
-    :param filePath: relative path of the file
-    :param fSeconds: number of seconds you want to load, if not it will load all the file
-    :return: Dictionary contains songName, array of the data, sample rate, dataType of the array and the hashes
-    """
-    song = loadAudioFile(filePath, fSeconds)
-    sampleFreqs, sampleTime, colorMesh = signal.spectrogram(song['data'], fs=song['sRate'], window='hann')
-    features = _spectralFeatures(song=song['data'], S=colorMesh, sr=song['sRate'])
-    song['spectrogram_Hash'] = createPerceptualHash(colorMesh)
-    song['spectral_centroid_Hash'] = createPerceptualHash(features[0])
-    song['spectral_rolloff_Hash'] = createPerceptualHash(features[1])
-    song['melspectrogram_Hash'] = createPerceptualHash(features[2])
-    return song
 
 # Load Songs
 song1 = loadSong("Songs/Adele_Million_Years_Ago_10.mp3", 60000)
 song2 = loadSong("Songs/ImagineDragons_natural_10.mp3", 60000)
-song3 = loadSong("Songs/Adele_Million_Years_Ago_10_music.mp3", 60000)
-song4 = loadSong("Songs/Spacetoon_remi_11.mp3", 60000)
-
-songs = [song1, song2, song3, song4]
+song3 = loadSong("Songs/Spacetoon_remi_11.mp3", 60000)
+song4 = loadSong("Songs/Adele_Million_Years_Ago_10_music.mp3", 60000)
+song5 = loadSong("Songs/Adele_Million_Years_Ago_10_vocals.mp3", 60000)
 
 # Mix 2 songs -> Create Spectrogram -> Create Hash
 mixedSong = mixSongs(song1['data'], song2['data'], w=0.8)
-sampleFreqs4, sampleTime4, colorMesh4 = signal.spectrogram(mixedSong, fs=song1['sRate'], window='hann')
-hashMix = createPerceptualHash(colorMesh4)
+sampleFrequency, sampleTime, colorMesh = signal.spectrogram(mixedSong, fs=song1['sRate'], window='hann')
+hashMix = createPerceptualHash(colorMesh)
 
-# Summation of all hamming Distance
-# Rule for Similarity Index: (1-hammingDistance/totalHashes)*100
-totalHashes = 0
-for song in songs:
-    song['hammingDistance'] = hex_to_hash(song['spectrogram_Hash']) - hex_to_hash(hashMix)
-    totalHashes += song['hammingDistance']
+original = (song4['data'] + song5['data']).astype('int16')
+sampleFrequency2, sampleTime2, colorMesh2 = signal.spectrogram(original, fs=song1['sRate'], window='hann')
+hashMix2 = createPerceptualHash(colorMesh2)
+
+diff1 = hex_to_hash(song1['spectrogram_Hash']) - hex_to_hash(hashMix)
+diff2 = hex_to_hash(song2['spectrogram_Hash']) - hex_to_hash(hashMix)
+diff3 = hex_to_hash(song3['spectrogram_Hash']) - hex_to_hash(hashMix)
+diff4 = hex_to_hash(song4['spectrogram_Hash']) - hex_to_hash(hashMix)
+diff5 = hex_to_hash(song1['spectrogram_Hash']) - hex_to_hash(song3['spectrogram_Hash'])
+diff6 = hex_to_hash(song2['spectrogram_Hash']) - hex_to_hash(song3['spectrogram_Hash'])
+diff7 = hex_to_hash(song1['spectrogram_Hash']) - hex_to_hash(hashMix2)
+
+diff1New = mapRanges(diff1, 0, 255, 0, 1)
+diff2New = mapRanges(diff2, 0, 255, 0, 1)
+diff3New = mapRanges(diff3, 0, 255, 0, 1)
+diff4New = mapRanges(diff4, 0, 255, 0, 1)
+diff5New = mapRanges(diff5, 0, 255, 0, 1)
+diff6New = mapRanges(diff6, 0, 255, 0, 1)
+diff7New = mapRanges(diff7, 0, 255, 0, 1)
 
 # Print the results
-print("hash1: ", song1['spectrogram_Hash'])
-print("hash2: ", song2['spectrogram_Hash'])
-print("hash3: ", song3['spectrogram_Hash'])
-print("hash4: ", song4['spectrogram_Hash'])
-print("mixHash: ", hashMix)
+print(f'''
+hash1: {song1['spectrogram_Hash']}
+hash2: {song2['spectrogram_Hash']}
+hash3: {song3['spectrogram_Hash']}
+hash4: {song4['spectrogram_Hash']}
+hash5: {song5['spectrogram_Hash']}
+0.8: {song1['name']}
+0.2: {song2['name']}
+mixHash: {hashMix}
 
-print("diff hash1 and mix", hex_to_hash(song1['spectrogram_Hash']) - hex_to_hash(hashMix))
-print("diff hash2 and mix", hex_to_hash(song2['spectrogram_Hash']) - hex_to_hash(hashMix))
-print("diff hash3 and mix", hex_to_hash(song3['spectrogram_Hash']) - hex_to_hash(hashMix))
-print("diff hash4 and mix", hex_to_hash(song4['spectrogram_Hash']) - hex_to_hash(hashMix))
-print("total Hashes", totalHashes)
+Difference {song1['name']} and Mix = {diff1}
+Difference {song2['name']} and Mix = {diff2}
+Difference {song3['name']} and Mix = {diff3}
+Difference {song4['name']} and Mix = {diff4}
 
-print(f"Similarity of song1 with the mix = {(1-song1['hammingDistance']/totalHashes)*100}%")
-print(f"Similarity of song2 with the mix = {(1-song2['hammingDistance']/totalHashes)*100}%")
-print(f"Similarity of song3 with the mix = {(1-song3['hammingDistance']/totalHashes)*100}%")
-print(f"Similarity of song4 with the mix = {(1-song4['hammingDistance']/totalHashes)*100}%")
+Similarity of {song1['name']} with the mix = {(1-diff1New)*100}%
+Similarity of {song2['name']} with the mix = {(1-diff2New)*100}%
+Similarity of {song3['name']} with the mix = {(1-diff3New)*100}%
+Similarity of {song4['name']} with the mix = {(1-diff4New)*100}%
+
+Difference {song1['name']} with {song3['name']} = {diff5}
+Similarity = {(1-diff5New)*100}%
+
+Difference {song2['name']} with {song3['name']} = {diff6}
+Similarity = {(1-diff6New)*100}%
+
+Difference {song1['name']} with its (music+vocals) = {diff7}
+Similarity = {(1-diff7New)*100}%
+''')
+
