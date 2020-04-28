@@ -1,5 +1,6 @@
 from PIL import Image
 import imagehash
+from imagehash import hex_to_hash
 import numpy as np
 from scipy import signal
 from pydub import AudioSegment
@@ -47,11 +48,9 @@ def _spectralFeatures(song: "np.ndarray"= None, S: "np.ndarray" = None, sr: int 
     - sr : sampling frequency default 22050
     - window: a string specifying the window applied default hann (see options)
     """
-    specFeatures = [None, None, None]
-    specFeatures[0] = l.feature.spectral_centroid(y= song, S=S, sr=sr, window = window)
-    specFeatures[1] = l.feature.spectral_rolloff(y= song, S=S, sr=sr, window = window)
-    specFeatures[2] = l.feature.melspectrogram(y= song, S=S, sr=sr, window = window)
-    return specFeatures
+    return [l.feature.spectral_centroid(y= song, S=S, sr=sr, window = window),
+            l.feature.spectral_rolloff(y=song, S=S, sr=sr, window=window),
+            l.feature.melspectrogram(y=song, S=S, sr=sr, window=window)]
 
 
 def mixSongs(song1: np.ndarray, song2: np.ndarray, dType: str = 'int16', w: float = 0.5) -> np.ndarray:
@@ -63,8 +62,7 @@ def mixSongs(song1: np.ndarray, song2: np.ndarray, dType: str = 'int16', w: floa
     :param w: weight (percentage) of song1
     :return array of the mixing songs
     """
-    mixed = (w*song1 + (1.0-w)*song2).astype(dType)
-    return mixed
+    return (w*song1 + (1.0-w)*song2).astype(dType)
 
 
 def createPerceptualHash(arrayData: "np.ndarray") -> str:
@@ -74,8 +72,17 @@ def createPerceptualHash(arrayData: "np.ndarray") -> str:
     :return: a string describe the hashed array (could be converted to hex using hex_to_hash())
     """
     dataInstance = Image.fromarray(arrayData)
-    dataHash = imagehash.phash(dataInstance, hash_size=16)
-    return dataHash.__str__()
+    return imagehash.phash(dataInstance, hash_size=16).__str__()
+
+
+def getHammingDistance(hash1: str, hash2: str) -> int:
+    """
+    Gets the hamming distance of 2 hashes
+    :param hash1: value of first hash
+    :param hash2: value of second hash
+    :return: an integer describe the hamming distance between the 2 hashes
+    """
+    return hex_to_hash(hash1) - hex_to_hash(hash2)
 
 
 def loadSong(filePath: str, fSeconds: float = None) -> dict:
@@ -95,6 +102,7 @@ def loadSong(filePath: str, fSeconds: float = None) -> dict:
     song['melspectrogram_Hash'] = createPerceptualHash(features[2])
     return song
 
+
 def mapRanges(inputValue: float, inMin: float, inMax: float, outMin: float, outMax: float):
     """
     Map a given value from range 1 -> range 2
@@ -105,22 +113,6 @@ def mapRanges(inputValue: float, inMin: float, inMax: float, outMin: float, outM
     :param outMax: Maximum Value of Range 2
     :return: The new Value in Range 2
     """
-    slope = (outMax - outMin) / (inMax - inMin)
-    newValue = outMin + slope * (inputValue - inMin)
-    return newValue
+    slope = (outMax-outMin) / (inMax-inMin)
+    return outMin + slope*(inputValue-inMin)
 
-
-# Summation of all hamming Distance
-# Rule for Similarity Index: (1-hammingDistance/totalHashes)*100
-# totalHashes = 0
-# for song in songs:
-#     song['hammingDistance'] = hex_to_hash(song['spectrogram_Hash']) - hex_to_hash(hashMix)
-#     totalHashes += song['hammingDistance']
-
-
-# print(f'''
-# Similarity of song1 with the mix = {(1-song1['hammingDistance']/totalHashes)*100}%
-# Similarity of song2 with the mix = {(1-song2['hammingDistance']/totalHashes)*100}%
-# Similarity of song3 with the mix = {(1-song3['hammingDistance']/totalHashes)*100}%
-# Similarity of song4 with the mix = {(1-song4['hammingDistance']/totalHashes)*100}%
-# ''')
