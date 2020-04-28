@@ -1,17 +1,17 @@
 from helpers import *
 from math import ceil
 
-hammingDifferences = []
-feature1Differences = []
-feature2Differences = []
-feature3Differences = []
-similarities = []
-feature1Similarities = []
-feature2Similarities = []
-feature3Similarities = []
-avgSimilaritiesAll = []
-avgSimilaritiesF3 = []
-weight = 0.8
+hammingDifferences = []        # List contains the hamming distance of spectrogram hashes of all the songs and the mix
+feature1Differences = []       # List contains the hamming distance of feature 1 hashes of all the songs and the mix
+feature2Differences = []       # List contains the hamming distance of feature 2 hashes of all the songs and the mix
+feature3Differences = []       # List contains the hamming distance of feature 3 hashes of all the songs and the mix
+similarities = []              # List contains the similarity percentage of all the songs and the mix (Using Spectrogram Hash Only)
+feature1Similarities = []      # List contains the similarity percentage of all the songs and the mix (Using feature 1 Hash Only)
+feature2Similarities = []      # List contains the similarity percentage of all the songs and the mix (Using feature 2 Hash Only)
+feature3Similarities = []      # List contains the similarity percentage of all the songs and the mix (Using feature 3 Hash Only)
+avgSimilaritiesAll = []        # List contains the similarity percentage of all the songs and the mix (Using average hash of Spectrogram and all the features)
+avgSimilaritiesF3 = []         # List contains the similarity percentage of all the songs and the mix (Using average hash of Spectrogram + feature 3)
+weight = 0.8                   # Weight of the first song when mixing 2 songs
 
 # Load Songs
 song1 = loadSong("Songs/Adele_Million_Years_Ago_10.mp3", 60000)
@@ -74,11 +74,11 @@ for i in range(4):
 
 # Print the results
 print(f'''
-
-hash1 (Adele)  : {song1['spectral_centroid_Hash']}
-hash2 (Imagine): {song2['spectral_centroid_Hash']}
-hash3 (Birdy)  : {song3['spectral_centroid_Hash']}
-hash4 (Remi)   : {song4['spectral_centroid_Hash']}
+-- Spectrogram Hash --
+hash1 (Adele)  : {song1['spectrogram_Hash']}
+hash2 (Imagine): {song2['spectrogram_Hash']}
+hash3 (Birdy)  : {song3['spectrogram_Hash']}
+hash4 (Remi)   : {song4['spectrogram_Hash']}
 {weight}: {song1['name']}
 {ceil((1-weight)*10)/10}: {song2['name']}
 mixHash: {hashMix}
