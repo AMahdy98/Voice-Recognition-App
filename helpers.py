@@ -29,10 +29,9 @@ def loadAudioFile(filePath: str, fSeconds: float = None) -> dict:
         "sRate": sampleRate,
         "dType": songDataType,
         "spectrogram_Hash": None,
-        "spectral_centroid_Hash": None,
-        "spectral_rolloff_Hash": None,
         "melspectrogram_Hash": None,
-        "hammingDistance": None
+        "mfcc_Hash": None,
+        "chroma_stft_Hash": None,
     }
     return songDictionary
 
@@ -48,9 +47,9 @@ def _spectralFeatures(song: "np.ndarray"= None, S: "np.ndarray" = None, sr: int 
     - sr : sampling frequency default 22050
     - window: a string specifying the window applied default hann (see options)
     """
-    return [l.feature.spectral_centroid(y= song, S=S, sr=sr, window = window),
-            l.feature.spectral_rolloff(y=song, S=S, sr=sr, window=window),
-            l.feature.melspectrogram(y=song, S=S, sr=sr, window=window)]
+    return [l.feature.melspectrogram(y=song, S=S, sr=sr, window=window),
+            l.feature.mfcc(y=song.astype('float64'), sr=sr),
+            l.feature.chroma_stft(y= song, S=S, sr=sr, window=window)]
 
 
 def mixSongs(song1: np.ndarray, song2: np.ndarray, dType: str = 'int16', w: float = 0.5) -> np.ndarray:
@@ -97,9 +96,9 @@ def loadSong(filePath: str, fSeconds: float = None) -> dict:
     sampleFreqs, sampleTime, colorMesh = signal.spectrogram(song['data'], fs=song['sRate'], window='hann')
     features = _spectralFeatures(song=song['data'], S=colorMesh, sr=song['sRate'])
     song['spectrogram_Hash'] = createPerceptualHash(colorMesh)
-    song['spectral_centroid_Hash'] = createPerceptualHash(features[0])
-    song['spectral_rolloff_Hash'] = createPerceptualHash(features[1])
-    song['melspectrogram_Hash'] = createPerceptualHash(features[2])
+    song['melspectrogram_Hash'] = createPerceptualHash(features[0])
+    song['mfcc_Hash'] = createPerceptualHash(features[1])
+    song['chroma_stft_Hash'] = createPerceptualHash(features[2])
     return song
 
 
