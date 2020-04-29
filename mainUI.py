@@ -1,5 +1,5 @@
 import UI as ui
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtGui
 import logging
 from loader import mp3ToData
 from functools import partial
@@ -26,7 +26,7 @@ class voiceRecognizer(ui.Ui_MainWindow):
         self.testHash = None  # The Mix output resulted hash
         self.audMix = None  # The Mix output resulted Audio File
         self.featureHash = None  # Holds the features extracted from Mix
-        self.results = {}  # Holds the Results with each song
+        self.results = []  # Holds the Results with each song
         self.songsPath = "Songs/"  # path to songs directory
         self.dbPath = "Database/db.json"  # path to database directory
         self.spectrogram = spectrogram()._spectrogram  # Spectrogram Extraction function
@@ -41,6 +41,10 @@ class voiceRecognizer(ui.Ui_MainWindow):
 
         self.finderBtn.clicked.connect(self.__extract)
 
+        self.resultsTable.hide()
+
+
+
     def loadFile(self, indx):
         """
         Responsible for the following :
@@ -50,7 +54,6 @@ class voiceRecognizer(ui.Ui_MainWindow):
         - load only the first minute of any song
         """
         self.statusbar.showMessage("Loading Audio File %s"%indx)
-        print(indx)
         audFile, audFormat = QtWidgets.QFileDialog.getOpenFileName(None, "Load Audio File %s"%(indx),
                                                                                  filter="*.mp3")
         self.logger.debug("Audio File %s Loaded"%indx)
@@ -66,10 +69,9 @@ class voiceRecognizer(ui.Ui_MainWindow):
             self.logger.debug("extraction successful")
             self.audFiles[indx-1] = audData
             self.audRates[indx-1] = audRate
-            self.lineEdits[indx-1].setText(audFile)
+            self.lineEdits[indx-1].setText(audFile.split('/')[-1])
             self.statusbar.showMessage("Loading Done")
             self.logger.debug("Loading done")
-            print(self.audFiles[indx-1])
 
     def __extract(self):
         """
@@ -84,23 +86,26 @@ class voiceRecognizer(ui.Ui_MainWindow):
         self.logger.debug("starting searching process")
 
         if (self.audFiles[0] is not None) and (self.audFiles[1] is not None):
-            print("here")
             self.logger.debug("loaded two different songs ")
             self.audMix = mixSongs(self.audFiles[0], self.audFiles[1], w=self.ratioSlider.value()/100)
+
         else:
-            print("here2")
             self.logger.debug("loaded only one song")
             if self.audFiles[0] is not None : self.audMix = self.audFiles[0]
             if self.audFiles[1] is not None: self.audMix = self.audFiles[1]
+            if self.audFiles[0] is None and self.audFiles[1] is None:
+                self.showMessage("Warning", "You need to at least load one Audio File",
+                                 QtWidgets.QMessageBox.Ok, QtWidgets.QMessageBox.Warning)
 
-        self.logger.debug("starting Extraction")
-        print(self.audFiles[0])
+        if self.audMix is not None:
+            self.logger.debug("starting Extraction")
 
-        self.testHash = createPerceptualHash(self.spectrogram(self.audMix, self.audRates[0])[-1])
-        self.featureHash = createPerceptualHash(self.extractFeatures(self.audMix,
-                                                                     self.spectrogram(self.audMix, self.audRates[0])[-1],
-                                                                     self.audRates[0])[-1])
-        self.__compareHash()
+            self.testHash = createPerceptualHash(self.spectrogram(self.audMix, self.audRates[0])[-1])
+            self.featureHash = createPerceptualHash(self.extractFeatures(self.audMix,
+                                                                         self.spectrogram(self.audMix, self.audRates[0])[-1],
+                                                                         self.audRates[0])[-1])
+            self.__compareHash()
+        self.statusbar.clearMessage()
 
     def __compareHash(self):
         """
@@ -108,14 +113,58 @@ class voiceRecognizer(ui.Ui_MainWindow):
 
         - Reading the database's saved hashes
         - Compare the resulted hashesh with those saved in database
+        - Sorting the results and sending data to Table
         """
         self.logger.debug("staring comparisons ... ")
         self.statusbar.showMessage("Loading results .. ")
-        for songName, songHashes in readJson('db.json'):
-            self.results.update({songName: mapRanges(getHammingDistance(songHashes[self.spectroHashKey],
-                                                                        self.testHash), 0, 255, 0, 1)})
-        print(self.results)
 
+        for songName, songHashes in readJson(self.dbPath):
+            self.results.append((songName, (1 - mapRanges(getHammingDistance(songHashes[self.spectroHashKey],
+                                                                        self.testHash), 0, 255, 0, 1)) * 100 ))
+        self.results.sort(key= lambda x: x[1], reverse= True)
+
+        self.statusbar.clearMessage()
+
+        self.__startTable()
+
+    def __startTable(self):
+        """
+        Responsible for the following :
+
+        - Setting TableWidget Parameters, Columns and Rows
+        - Clearing the Results Buffer
+        """
+        self.resultsTable.setColumnCount(1)
+        self.resultsTable.setRowCount(len(self.results))
+
+        for row in range(len(self.results)):
+            self.resultsTable.setItem(row, 0,QtWidgets.QTableWidgetItem("Found Match with %s by %s"%(self.results[row][0], self.results[row][1])+"%"))
+            self.resultsTable.item(row, 0).setBackground(QtGui.QColor(57, 65, 67))
+
+        self.resultsTable.resizeColumnsToContents()
+        self.resultsTable.show()
+
+        self.results.clear()
+
+    def showMessage(self, header, message, button, icon):
+        """
+        Responsible for showing message boxes
+
+        ============= ===================================================================================
+        **Arguments**
+        header:       Box header title.
+        message       the informative message to be shown.
+        button:       button type.
+        icon:         icon type.
+        ============= ===================================================================================
+        """
+        msg = QtWidgets.QMessageBox()
+        msg.setWindowTitle(header)
+        msg.setText(message)
+        msg.setIcon(icon)
+        msg.setStandardButtons(button)
+        self.logger.debug("messege shown with %s %s "%(header, message))
+        msg.exec_()
 
 if __name__ == '__main__':
     import sys

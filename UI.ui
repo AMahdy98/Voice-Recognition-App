@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>876</width>
+    <width>573</width>
     <height>689</height>
    </rect>
   </property>
@@ -20,6 +20,12 @@
    <size>
     <width>500</width>
     <height>500</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>573</width>
+    <height>16777215</height>
    </size>
   </property>
   <property name="palette">
@@ -568,7 +574,26 @@
        </widget>
       </item>
       <item>
-       <widget class="QTableView" name="resultsTable"/>
+       <widget class="QTableWidget" name="resultsTable">
+        <property name="sizeAdjustPolicy">
+         <enum>QAbstractScrollArea::AdjustToContents</enum>
+        </property>
+        <property name="editTriggers">
+         <set>QAbstractItemView::NoEditTriggers</set>
+        </property>
+        <property name="alternatingRowColors">
+         <bool>false</bool>
+        </property>
+        <property name="rowCount">
+         <number>0</number>
+        </property>
+        <property name="columnCount">
+         <number>0</number>
+        </property>
+        <attribute name="horizontalHeaderVisible">
+         <bool>false</bool>
+        </attribute>
+       </widget>
       </item>
      </layout>
     </item>
@@ -612,7 +637,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>876</width>
+     <width>573</width>
      <height>22</height>
     </rect>
    </property>
