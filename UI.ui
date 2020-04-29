@@ -467,18 +467,8 @@
         <property name="flat">
          <bool>true</bool>
         </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="audPath1">
-        <property name="frame">
-         <bool>true</bool>
-        </property>
-        <property name="echoMode">
-         <enum>QLineEdit::NoEcho</enum>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
+        <property name="indx" stdset="0">
+         <number>1</number>
         </property>
        </widget>
       </item>
@@ -500,18 +490,22 @@
         <property name="flat">
          <bool>true</bool>
         </property>
+        <property name="indx" stdset="0">
+         <number>2</number>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="aud1Text">
+        <property name="text">
+         <string/>
+        </property>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLineEdit" name="audPath2">
-        <property name="frame">
-         <bool>true</bool>
-        </property>
-        <property name="echoMode">
-         <enum>QLineEdit::NoEcho</enum>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
+       <widget class="QLabel" name="aud2Text">
+        <property name="text">
+         <string/>
         </property>
        </widget>
       </item>
@@ -521,6 +515,12 @@
      <layout class="QVBoxLayout" name="verticalLayout_3">
       <item>
        <widget class="QSlider" name="ratioSlider">
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="value">
+         <number>50</number>
+        </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>

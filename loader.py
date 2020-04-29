@@ -3,22 +3,20 @@ import numpy as np
 from pydub import AudioSegment
 
 
-def loadPath(folderPath: str) -> list:
+def loadPath(folderPath: str) -> tuple:
     """
     Gets Path for each file in folder
 
     :param folderPath: relative path of the folder
     :return: list containing file name and file path
     """
-    paths = []
     basePath = Path(folderPath)
     filesInPath = (item for item in basePath.iterdir() if item.is_file())
     for item in filesInPath:
-        paths.append((item.stem, item.relative_to(basePath.parent)))
-    return paths
+        yield (item.stem, item.relative_to(basePath.parent))
 
 
-def mp3ToData(filePaths: str, fMilliSeconds: float = None) -> dict:
+def mp3ToData(filePaths: str, fMilliSeconds: float = None) -> tuple:
     """
     Loads MP3 audio file 
 
@@ -32,7 +30,7 @@ def mp3ToData(filePaths: str, fMilliSeconds: float = None) -> dict:
         audioFile = AudioSegment.from_mp3(filePaths)
     data = np.array(audioFile.get_array_of_samples())
     rate = audioFile.frame_rate
-    return data , rate
+    return data, rate
 
 # testing shit
 # Songs = loadPath("Songs/")

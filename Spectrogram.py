@@ -28,10 +28,10 @@ class spectrogram():
         self.features = None
         self.container = None
 
-    def __call__(self, songData: "numpy.ndarray", songSR: int, window:str, fileName:str,
+    def __call__(self, songData: ndarray, songSR: int, window:str, fileName:str = None,
                  path:str = None, compressed: bool = False, featureize:bool = False):
         """
-        Caller function for the class which maintains all it's implemented methods
+        Caller function for the class which maintains all it's implemented methods.
 
         Parameters
         -----------
@@ -45,7 +45,7 @@ class spectrogram():
         """
         self._spectrogram(songData, songSR, window)
         if featureize:
-            self.features= self._spectralFeatures(None, self.colorMesh, songSR,window)
+            self.features= self.spectralFeatures(None, self.colorMesh, songSR,window)
         print("spectrogram created")
 
         if fileName:
@@ -56,7 +56,7 @@ class spectrogram():
                 self._saveFormat(path, fileName, compressed=compressed, featurize=featureize)
             print("spectrogram saved")
 
-    def _spectrogram(self, songData: "numpy.ndarray", songSampleRate:int, windowType: str):
+    def _spectrogram(self, songData: ndarray, songSampleRate:int=22050, windowType: str="hann")->tuple:
         """
         Creates a Spectrogram of the given data
 
@@ -74,6 +74,7 @@ class spectrogram():
         else:
             self.sampleFreqs, self.sampleTime, self.colorMesh = signal.spectrogram(songData,
                                                                                    fs=songSampleRate, window=windowType)
+        return (self.sampleFreqs, self.sampleTime, self.colorMesh)
 
     def _saveFormat(self, folder:str, filename:str, featurize : bool = False, compressed: bool = False):
         """
@@ -99,15 +100,17 @@ class spectrogram():
         with open(folder+filename+".json", 'w') as outfile:
             json.dump(self.container, outfile)
 
-    def _spectralFeatures(self, song: "np.ndarray"= None, S: "np.ndarray" = None, sr: int = 22050, window:'str'='hann'):
+    def spectralFeatures(self, song: "ndarray"= None, S: "ndarray" = None, sr: int = 22050, window:'str'='hann'):
         """
-        Calculates the Spectral Centroid of a given data or the data instantiated in the class
+        Calculates the Spectral Centroid of a given data or the data instantiated in the class.
+
         Parameters
         -----------
         - song  : wav file array
         - S    : spectrogram readings
         - sr : sampling frequency default 22050
-        - window: a string specifying the window applied default hann (see options)
+        - window: a string specifying the window applied default hann (see options).
+
 
         Options
         -------
@@ -132,12 +135,9 @@ class spectrogram():
         - exponential (needs decay scale)
         - tukey (needs taper fraction)
         """
-        if not (song or sr) :
-            print('provide either a wav file data or a spectrogram readings or both')
-        else:
-            return ndarray(l.feature.spectral_centroid(y= song, sr=sr, S=S,window = window),
-                           l.feature.spectral_rolloff(y= song, sr=sr, S=S,window = window),
-                           l.feature.melspectrogram(y= song, sr=sr, S=S,window = window))
+        return (l.feature.spectral_centroid(y= song, sr=sr, S=S,window = window),
+               l.feature.spectral_rolloff(y= song, sr=sr, S=S,window = window),
+               l.feature.melspectrogram(y= song, sr=sr, S=S,window = window))
 
 if __name__ == '__main__':
     # Basic Usage
@@ -145,8 +145,9 @@ if __name__ == '__main__':
     from scipy.io import wavfile
     sampleRate, songdata = wavfile.read("tests/Adele_Million_Years_Ago_10.wav")
     spectrum = spectrogram()
-    # spectrum(songdata, sampleRate, window='hann', songName="test", compressed=True, path='tests/')
-    spectrogram()._spectralCentroid()
+    spectrum(songdata, sampleRate,"hann", featureize=True)
+    # print(spectrum.features
+    # spectrogram()._spectralFeatures()
 
 
 

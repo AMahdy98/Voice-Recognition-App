@@ -1,0 +1,14 @@
+2020-04-29 03:30:16,839 Audio File 1 Loaded
+2020-04-29 03:30:16,839 starting extraction of data
+2020-04-29 03:30:16,891 subprocess.call(['ffmpeg', '-y', '-f', 'mp3', '-i', '/home/ahmad/PycharmProjects/Voice-Recognition-App/Songs/Birdy_strange_birds_10.mp3', '-acodec', 'pcm_s16le', '-vn', '-f', 'wav', '-'])
+2020-04-29 03:30:17,386 extraction successful
+2020-04-29 03:30:17,386 Loading done
+2020-04-29 03:30:21,819 Audio File 2 Loaded
+2020-04-29 03:30:21,819 starting extraction of data
+2020-04-29 03:30:21,873 subprocess.call(['ffmpeg', '-y', '-f', 'mp3', '-i', '/home/ahmad/PycharmProjects/Voice-Recognition-App/Songs/ImagineDragons_natural_10.mp3', '-acodec', 'pcm_s16le', '-vn', '-f', 'wav', '-'])
+2020-04-29 03:30:22,438 extraction successful
+2020-04-29 03:30:22,439 Loading done
+2020-04-29 03:30:23,666 starting searching process
+2020-04-29 03:30:23,666 loaded two different songs 
+2020-04-29 03:30:23,710 starting Extraction
+2020-04-29 03:30:24,252 staring comparisons ... 
