@@ -19,13 +19,13 @@ class voiceRecognizer(ui.Ui_MainWindow):
         # Initializer
         super(voiceRecognizer, self).setupUi(starterWindow)
         self.spectroHashKey = "spectrohash"  # Key used to get the spectrogram Hash
-        self.melKey = "mcc"  # key used to get mel Hash
+        self.featureKey = "features"  # key used to get mel Hash
         self.audFiles = [None, None]  # List Containing both songs
         self.audRates = [None, None]  # List contains Songs Rates which must be equal
         self.lineEdits = [self.aud1Text, self.aud2Text]
         self.testHash = None  # The Mix output resulted hash
         self.audMix = None  # The Mix output resulted Audio File
-        self.featureHash = None  # Holds the features extracted from Mix
+        self.featureHash = []  # Holds the features extracted from Mix
         self.results = []  # Holds the Results with each song
         self.songsPath = "Songs/"  # path to songs directory
         self.dbPath = "Database/db.json"  # path to database directory
@@ -100,10 +100,12 @@ class voiceRecognizer(ui.Ui_MainWindow):
         if self.audMix is not None:
             self.logger.debug("starting Extraction")
 
-            self.testHash = createPerceptualHash(self.spectrogram(self.audMix, self.audRates[0])[-1])
-            self.featureHash = createPerceptualHash(self.extractFeatures(self.audMix,
-                                                                         self.spectrogram(self.audMix, self.audRates[0])[-1],
-                                                                         self.audRates[0])[-1])
+            self.spectro = self.spectrogram(self.audMix, self.audRates[0])[-1]
+            self.testHash = createPerceptualHash(self.spectro)
+
+            for feature in self.extractFeatures(self.audMix, self.spectro, self.audRates[0]):
+                self.featureHash.append(createPerceptualHash(feature))
+
             self.__compareHash()
         self.statusbar.clearMessage()
 
@@ -119,8 +121,15 @@ class voiceRecognizer(ui.Ui_MainWindow):
         self.statusbar.showMessage("Loading results .. ")
 
         for songName, songHashes in readJson(self.dbPath):
-            self.results.append((songName, (1 - mapRanges(getHammingDistance(songHashes[self.spectroHashKey],
-                                                                        self.testHash), 0, 255, 0, 1)) * 100 ))
+            self.spectroDiff = getHammingDistance(songHashes[self.spectroHashKey], self.testHash)
+            self.featureDiff = 0
+
+            for i, feature in enumerate(songHashes[self.featureKey]):
+                self.featureDiff += getHammingDistance(feature, self.featureHash[i])
+
+            self.avg = (self.spectroDiff + self.featureDiff)/2
+            self.results.append((songName, (1 - mapRanges(self.avg, 0, 255, 0, 1)) * 100 ))
+
         self.results.sort(key= lambda x: x[1], reverse= True)
 
         self.statusbar.clearMessage()
@@ -138,7 +147,7 @@ class voiceRecognizer(ui.Ui_MainWindow):
         self.resultsTable.setRowCount(len(self.results))
 
         for row in range(len(self.results)):
-            self.resultsTable.setItem(row, 0,QtWidgets.QTableWidgetItem("Found Match with %s by %s"%(self.results[row][0], self.results[row][1])+"%"))
+            self.resultsTable.setItem(row, 0,QtWidgets.QTableWidgetItem("Found Match with %s by %s"%(self.results[row][0], round(self.results[row][1], 2))+"%"))
             self.resultsTable.item(row, 0).setBackground(QtGui.QColor(57, 65, 67))
 
         self.resultsTable.resizeColumnsToContents()

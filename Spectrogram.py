@@ -134,9 +134,9 @@ class spectrogram():
         - exponential (needs decay scale)
         - tukey (needs taper fraction)
         """
-        return (l.feature.spectral_centroid(y= song, sr=sr, S=S,window = window),
-               l.feature.spectral_rolloff(y= song, sr=sr, S=S,window = window),
-               l.feature.melspectrogram(y= song, sr=sr, S=S,window = window))
+        return (l.feature.melspectrogram(y=song, S=S, sr=sr, window=window),
+                l.feature.mfcc(y=song.astype('float64'), sr=sr),
+                l.feature.chroma_stft(y= song, S=S, sr=sr, window=window))
 
 if __name__ == '__main__':
     # Basic Usage

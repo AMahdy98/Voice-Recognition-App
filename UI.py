@@ -201,6 +201,7 @@ class Ui_MainWindow(object):
         self.ratioSlider.setMaximum(100)
         self.ratioSlider.setProperty("value", 50)
         self.ratioSlider.setOrientation(QtCore.Qt.Horizontal)
+        self.ratioSlider.setTickPosition(QtWidgets.QSlider.TicksBelow)
         self.ratioSlider.setObjectName("ratioSlider")
         self.verticalLayout_3.addWidget(self.ratioSlider)
         self.finderBtn = QtWidgets.QPushButton(self.centralwidget)

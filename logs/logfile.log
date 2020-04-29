@@ -1,9 +1,14 @@
-2020-04-29 16:10:33,631 Audio File 1 Loaded
-2020-04-29 16:10:33,631 starting extraction of data
-2020-04-29 16:10:33,681 subprocess.call(['ffmpeg', '-y', '-f', 'mp3', '-i', '/home/ahmad/PycharmProjects/Voice-Recognition-App/Songs/Spacetoon_remi_11.mp3', '-acodec', 'pcm_s16le', '-vn', '-f', 'wav', '-'])
-2020-04-29 16:10:33,968 extraction successful
-2020-04-29 16:10:33,968 Loading done
-2020-04-29 16:10:35,281 starting searching process
-2020-04-29 16:10:35,281 loaded only one song
-2020-04-29 16:10:35,281 starting Extraction
-2020-04-29 16:10:35,856 staring comparisons ... 
+2020-04-29 17:09:18,683 Audio File 1 Loaded
+2020-04-29 17:09:18,683 starting extraction of data
+2020-04-29 17:09:18,740 subprocess.call(['ffmpeg', '-y', '-f', 'mp3', '-i', '/home/ahmad/PycharmProjects/Voice-Recognition-App/Songs/Adele_Million_Years_Ago_10.mp3', '-acodec', 'pcm_s16le', '-vn', '-f', 'wav', '-'])
+2020-04-29 17:09:19,341 extraction successful
+2020-04-29 17:09:19,342 Loading done
+2020-04-29 17:09:22,936 Audio File 2 Loaded
+2020-04-29 17:09:22,936 starting extraction of data
+2020-04-29 17:09:22,993 subprocess.call(['ffmpeg', '-y', '-f', 'mp3', '-i', '/home/ahmad/PycharmProjects/Voice-Recognition-App/Songs/ImagineDragons_natural_10.mp3', '-acodec', 'pcm_s16le', '-vn', '-f', 'wav', '-'])
+2020-04-29 17:09:23,507 extraction successful
+2020-04-29 17:09:23,508 Loading done
+2020-04-29 17:09:27,283 starting searching process
+2020-04-29 17:09:27,283 loaded two different songs 
+2020-04-29 17:09:27,329 starting Extraction
+2020-04-29 17:09:33,360 staring comparisons ... 

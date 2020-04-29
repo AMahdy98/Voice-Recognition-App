@@ -10,11 +10,13 @@ def updateDB(filePath:str, fileOut:str, mode: str = "a"):
         data, rate = loader.mp3ToData(path, 60000)
         _, _, mesh = spectrogram()._spectrogram(data, rate)
 
-        _, _, mcc = spectrogram().spectralFeatures(data, mesh, rate)
+        feats = spectrogram().spectralFeatures(data, mesh, rate)
+        features = []
         spectrohash = createPerceptualHash(mesh)
-        mcchash = createPerceptualHash(mcc)
+        for feature in feats :
+            features.append(createPerceptualHash(feature))
 
-        d.update({audFile: {"spectrohash": spectrohash, "mcc": mcchash}})
+        d.update({audFile: {"spectrohash": spectrohash, "features": features}})
         print("%s is hashed" % audFile)
 
     with open(fileOut+"db.json", mode) as outfile:
