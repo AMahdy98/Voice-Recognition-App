@@ -127,10 +127,10 @@ class voiceRecognizer(ui.Ui_MainWindow):
             for i, feature in enumerate(songHashes[self.featureKey]):
                 self.featureDiff += getHammingDistance(feature, self.featureHash[i])
 
-            self.avg = (self.spectroDiff + self.featureDiff)/2
-            self.results.append((songName, (1 - mapRanges(self.avg, 0, 255, 0, 1)) * 100 ))
+            self.avg = (self.spectroDiff + self.featureDiff)/4
+            self.results.append((songName, (abs(1 - mapRanges(self.avg, 0, 255, 0, 1)))*100))
 
-        self.results.sort(key= lambda x: x[1], reverse= True)
+        self.results.sort(key= lambda x: x[1], reverse=True)
 
         self.statusbar.clearMessage()
 
@@ -143,14 +143,21 @@ class voiceRecognizer(ui.Ui_MainWindow):
         - Setting TableWidget Parameters, Columns and Rows
         - Clearing the Results Buffer
         """
-        self.resultsTable.setColumnCount(1)
+        self.resultsTable.setColumnCount(2)
         self.resultsTable.setRowCount(len(self.results))
 
         for row in range(len(self.results)):
-            self.resultsTable.setItem(row, 0,QtWidgets.QTableWidgetItem("Found Match with %s by %s"%(self.results[row][0], round(self.results[row][1], 2))+"%"))
+            self.resultsTable.setItem(row, 0, QtWidgets.QTableWidgetItem(self.results[row][0]))
+            self.resultsTable.setItem(row, 1, QtWidgets.QTableWidgetItem(str(round(self.results[row][1], 2))+"%"))
             self.resultsTable.item(row, 0).setBackground(QtGui.QColor(57, 65, 67))
+            self.resultsTable.item(row, 1).setBackground(QtGui.QColor(57, 65, 67))
+            self.resultsTable.verticalHeader().setSectionResizeMode(row, QtWidgets.QHeaderView.Stretch)
 
-        self.resultsTable.resizeColumnsToContents()
+        for col in range(2):
+            self.resultsTable.horizontalHeader().setSectionResizeMode(col, QtWidgets.QHeaderView.Stretch)
+
+        self.resultsTable.setHorizontalHeaderLabels(["Found Matches", "Percentage"])
+
         self.resultsTable.show()
 
         self.results.clear()
