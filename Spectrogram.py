@@ -21,7 +21,6 @@ class spectrogram():
         - colorMesh : holds the value (intenisty) of the frequency component
         - container : a dictionary used in the saved process
         """
-        print("Initializing Spectrogram")
         self.sampleFreqs = None
         self.sampleTime = None
         self.colorMesh = None

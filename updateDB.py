@@ -3,7 +3,7 @@ from Spectrogram import spectrogram
 import loader
 import json
 
-def updateDB(filePath:str, mode: str = "a"):
+def updateDB(filePath:str, fileOut:str, mode: str = "a"):
     d = {}
 
     for audFile, path in loader.loadPath(filePath):
@@ -17,7 +17,7 @@ def updateDB(filePath:str, mode: str = "a"):
         d.update({audFile: {"spectrohash": spectrohash, "mcc": mcchash}})
         print("%s is hashed" % audFile)
 
-    with open("db.json", mode) as outfile:
+    with open(fileOut+"db.json", mode) as outfile:
         json.dump(d, outfile, indent="\n")
 
 
@@ -29,6 +29,16 @@ def readJson(file):
 
 
 if __name__ == '__main__':
-    # updateDB("Songs", "a")
-    for i in readJson("db.json"):
-        print(i)
+    import sys
+    import warnings
+
+    warnings.filterwarnings("ignore")
+
+    if sys.argv[1] and sys.argv[2]:
+        updateDB(sys.argv[1], sys.argv[2], "w")
+    else:
+        for i in readJson("db.json"):
+            print(i)
+            print("File paths not given")
+
+    print("End of Script")
