@@ -42,6 +42,7 @@ class voiceRecognizer(ui.Ui_MainWindow):
         self.finderBtn.clicked.connect(self.__extract)
 
         self.resultsTable.hide()
+        self.label_2.hide()
 
 
 
@@ -143,6 +144,7 @@ class voiceRecognizer(ui.Ui_MainWindow):
         - Setting TableWidget Parameters, Columns and Rows
         - Clearing the Results Buffer
         """
+        self.label_2.show()
         self.resultsTable.setColumnCount(2)
         self.resultsTable.setRowCount(len(self.results))
 

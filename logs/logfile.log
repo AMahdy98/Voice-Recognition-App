@@ -1,14 +1,14 @@
-2020-04-29 22:24:35,012 Audio File 1 Loaded
-2020-04-29 22:24:35,012 starting extraction of data
-2020-04-29 22:24:35,075 subprocess.call(['ffmpeg', '-y', '-f', 'mp3', '-i', '/home/ahmad/PycharmProjects/Voice-Recognition-App/Songs/Adele_Million_Years_Ago_10.mp3', '-acodec', 'pcm_s16le', '-vn', '-f', 'wav', '-'])
-2020-04-29 22:24:35,691 extraction successful
-2020-04-29 22:24:35,692 Loading done
-2020-04-29 22:24:38,448 Audio File 2 Loaded
-2020-04-29 22:24:38,448 starting extraction of data
-2020-04-29 22:24:38,500 subprocess.call(['ffmpeg', '-y', '-f', 'mp3', '-i', '/home/ahmad/PycharmProjects/Voice-Recognition-App/Songs/ImagineDragons_natural_10.mp3', '-acodec', 'pcm_s16le', '-vn', '-f', 'wav', '-'])
-2020-04-29 22:24:39,062 extraction successful
-2020-04-29 22:24:39,062 Loading done
-2020-04-29 22:24:48,152 starting searching process
-2020-04-29 22:24:48,152 loaded two different songs 
-2020-04-29 22:24:48,194 starting Extraction
-2020-04-29 22:24:48,959 staring comparisons ... 
+2020-04-29 22:29:13,988 Audio File 1 Loaded
+2020-04-29 22:29:13,988 starting extraction of data
+2020-04-29 22:29:16,941 subprocess.call(['ffmpeg', '-y', '-f', 'mp3', '-i', '/home/ahmad/PycharmProjects/Voice-Recognition-App/Songs/Adele_Million_Years_Ago_10.mp3', '-acodec', 'pcm_s16le', '-vn', '-f', 'wav', '-'])
+2020-04-29 22:29:18,303 extraction successful
+2020-04-29 22:29:18,305 Loading done
+2020-04-29 22:29:23,227 Audio File 2 Loaded
+2020-04-29 22:29:23,227 starting extraction of data
+2020-04-29 22:29:23,592 subprocess.call(['ffmpeg', '-y', '-f', 'mp3', '-i', '/home/ahmad/PycharmProjects/Voice-Recognition-App/Songs/ImagineDragons_natural_10.mp3', '-acodec', 'pcm_s16le', '-vn', '-f', 'wav', '-'])
+2020-04-29 22:29:24,221 extraction successful
+2020-04-29 22:29:24,222 Loading done
+2020-04-29 22:29:36,463 starting searching process
+2020-04-29 22:29:36,463 loaded two different songs 
+2020-04-29 22:29:36,629 starting Extraction
+2020-04-29 22:29:39,299 staring comparisons ... 
