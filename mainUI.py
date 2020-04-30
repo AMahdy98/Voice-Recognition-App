@@ -25,7 +25,7 @@ class voiceRecognizer(ui.Ui_MainWindow):
         self.lineEdits = [self.aud1Text, self.aud2Text]
         self.testHash = None  # The Mix output resulted hash
         self.audMix = None  # The Mix output resulted Audio File
-        self.featureHash = []  # Holds the features extracted from Mix
+        self.featureMixHash = []  # Holds the features extracted from Mix
         self.results = []  # Holds the Results with each song
         self.songsPath = "Songs/"  # path to songs directory
         self.dbPath = "Database/db.json"  # path to database directory
@@ -105,7 +105,7 @@ class voiceRecognizer(ui.Ui_MainWindow):
             self.testHash = createPerceptualHash(self.spectro)
 
             for feature in self.extractFeatures(self.audMix, self.spectro, self.audRates[0]):
-                self.featureHash.append(createPerceptualHash(feature))
+                self.featureMixHash.append(createPerceptualHash(feature))
 
             self.__compareHash()
         self.statusbar.clearMessage()
@@ -126,7 +126,7 @@ class voiceRecognizer(ui.Ui_MainWindow):
             self.featureDiff = 0
 
             for i, feature in enumerate(songHashes[self.featureKey]):
-                self.featureDiff += getHammingDistance(feature, self.featureHash[i])
+                self.featureDiff += getHammingDistance(feature, self.featureMixHash[i])
 
             self.avg = (self.spectroDiff + self.featureDiff)/4
             self.results.append((songName, (abs(1 - mapRanges(self.avg, 0, 255, 0, 1)))*100))
