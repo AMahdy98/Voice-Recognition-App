@@ -1,9 +1,0 @@
-2020-04-30 14:25:54,604 Audio File 1 Loaded
-2020-04-30 14:25:54,604 starting extraction of data
-2020-04-30 14:25:54,652 subprocess.call(['ffmpeg', '-y', '-f', 'mp3', '-i', '/home/ahmad/PycharmProjects/Voice-Recognition-App/Songs/Birdy_strange_birds_10.mp3', '-acodec', 'pcm_s16le', '-vn', '-f', 'wav', '-'])
-2020-04-30 14:25:55,147 extraction successful
-2020-04-30 14:25:55,148 Loading done
-2020-04-30 14:25:56,112 starting searching process
-2020-04-30 14:25:56,112 loaded only one song
-2020-04-30 14:25:56,112 starting Extraction
-2020-04-30 14:25:56,892 staring comparisons ... 

@@ -462,7 +462,7 @@
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>../../.designer/backup/icons/icons8-insert-card-256.png</normaloff>../../.designer/backup/icons/icons8-insert-card-256.png</iconset>
+          <normaloff>icons/icons8-insert-card-256.png</normaloff>icons/icons8-insert-card-256.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -485,7 +485,7 @@
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>../../.designer/backup/icons/icons8-insert-card-256.png</normaloff>../../.designer/backup/icons/icons8-insert-card-256.png</iconset>
+          <normaloff>icons/icons8-insert-card-256.png</normaloff>icons/icons8-insert-card-256.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -527,9 +527,6 @@
         <property name="singleStep">
          <number>5</number>
         </property>
-        <property name="pageStep">
-         <number>5</number>
-        </property>
         <property name="value">
          <number>50</number>
         </property>
@@ -560,7 +557,7 @@
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>../../.designer/backup/icons/icons8-search-256.png</normaloff>../../.designer/backup/icons/icons8-search-256.png</iconset>
+          <normaloff>icons/icons8-search-256.png</normaloff>icons/icons8-search-256.png</iconset>
         </property>
         <property name="iconSize">
          <size>
