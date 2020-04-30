@@ -155,10 +155,11 @@ class voiceRecognizer(ui.Ui_MainWindow):
             self.resultsTable.item(row, 1).setBackground(QtGui.QColor(57, 65, 67))
             self.resultsTable.verticalHeader().setSectionResizeMode(row, QtWidgets.QHeaderView.Stretch)
 
+        self.resultsTable.setHorizontalHeaderLabels(["Found Matches", "Percentage"])
+
         for col in range(2):
             self.resultsTable.horizontalHeader().setSectionResizeMode(col, QtWidgets.QHeaderView.Stretch)
-
-        self.resultsTable.setHorizontalHeaderLabels(["Found Matches", "Percentage"])
+            self.resultsTable.horizontalHeaderItem(col).setBackground(QtGui.QColor(57, 65, 67))
 
         self.resultsTable.show()
 
