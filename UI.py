@@ -200,6 +200,7 @@ class Ui_MainWindow(object):
         self.ratioSlider = QtWidgets.QSlider(self.centralwidget)
         self.ratioSlider.setMaximum(100)
         self.ratioSlider.setSingleStep(5)
+        self.ratioSlider.setPageStep(5)
         self.ratioSlider.setProperty("value", 50)
         self.ratioSlider.setOrientation(QtCore.Qt.Horizontal)
         self.ratioSlider.setTickPosition(QtWidgets.QSlider.TicksBelow)
