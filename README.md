@@ -14,13 +14,13 @@ This is a simple usage application only for testing the Recognition algorithm :
 
 - Load desired Audio File with max 2 files
 
-   ![1](/home/ahmad/PycharmProjects/Voice-Recognition-App/Database/1.png)
+   ![1](Database/1.png)
 
 - Select the desired slider value from 0 to 100%
 
 - Click on the Search button 
 
-![2](/home/ahmad/PycharmProjects/Voice-Recognition-App/Database/2.png)
+![2](Database/2.png)
 
 
 
