@@ -1,9 +1,14 @@
-2020-05-01 00:10:34,260 Audio File 1 Loaded
-2020-05-01 00:10:34,261 starting extraction of data
-2020-05-01 00:10:42,089 subprocess.call(['ffmpeg', '-y', '-f', 'mp3', '-i', '/home/ahmad/PycharmProjects/Voice-Recognition-App/Songs/Birdy_strange_birds_10.mp3', '-acodec', 'pcm_s16le', '-vn', '-f', 'wav', '-'])
-2020-05-01 00:10:44,941 extraction successful
-2020-05-01 00:10:44,942 Loading done
-2020-05-01 00:10:47,668 starting searching process
-2020-05-01 00:10:47,668 loaded only one song
-2020-05-01 00:10:47,669 starting Extraction
-2020-05-01 00:10:49,548 staring comparisons ... 
+2020-05-03 15:34:08,405 Audio File 1 Loaded
+2020-05-03 15:34:08,406 starting extraction of data
+2020-05-03 15:34:10,137 subprocess.call(['ffmpeg', '-y', '-f', 'mp3', '-i', '/home/ahmad/PycharmProjects/Voice-Recognition-App/Songs/Spacetoon_remi_11.mp3', '-acodec', 'pcm_s16le', '-vn', '-f', 'wav', '-'])
+2020-05-03 15:34:10,506 extraction successful
+2020-05-03 15:34:10,507 Loading done
+2020-05-03 15:34:14,865 Audio File 1 Loaded
+2020-05-03 15:34:14,865 starting extraction of data
+2020-05-03 15:34:14,930 subprocess.call(['ffmpeg', '-y', '-f', 'mp3', '-i', '/home/ahmad/PycharmProjects/Voice-Recognition-App/Songs/Adele_Million_Years_Ago_10.mp3', '-acodec', 'pcm_s16le', '-vn', '-f', 'wav', '-'])
+2020-05-03 15:34:15,527 extraction successful
+2020-05-03 15:34:15,528 Loading done
+2020-05-03 15:35:58,705 starting searching process
+2020-05-03 15:35:58,705 loaded only one song
+2020-05-03 15:35:58,705 starting Extraction
+2020-05-03 15:35:59,781 staring comparisons ... 
